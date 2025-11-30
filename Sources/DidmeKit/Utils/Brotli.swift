@@ -16,6 +16,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //
+
 import Foundation
 import Compression
 
@@ -49,11 +50,11 @@ public enum DIDBrotli {
 
         // Explicit struct initialization
         var stream = compression_stream(
-            dst_ptr: nil,
+            dst_ptr: UnsafeMutablePointer<UInt8>(bitPattern: 0),
             dst_size: 0,
-            src_ptr: nil,
+            src_ptr: UnsafePointer<UInt8>(bitPattern: 0),
             src_size: 0,
-            state: nil
+            state: UnsafeMutableRawPointer(bitPattern: 0)
         )
 
         var status = compression_stream_init(&stream, operation, algorithm)
