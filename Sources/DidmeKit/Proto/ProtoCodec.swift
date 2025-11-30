@@ -138,9 +138,7 @@ func didDocumentToProto(_ doc: DIDDocument) throws -> PbDIDDocument {
     pb.prev = doc.prev ?? ""
     pb.core = doc.currentCore
 
-    if let cbor = Data(base64Encoded: doc.coreCbor) {
-        pb.coreCbor = cbor
-    }
+    pb.coreCbor = b64urlDecode(doc.coreCbor)
 
     pb.keyHistory = doc.keyHistory
 
@@ -417,10 +415,8 @@ func protoToJSON(_ pb: PbDIDDocument) throws -> Data {
     out["currentCore"] = pb.core
     out["keyHistory"] = pb.keyHistory
     
-    if !pb.coreCbor.isEmpty {
-        out["coreCbor"] = Data(pb.coreCbor).base64EncodedString()
-    }
-    
+    out["coreCbor"] = b64urlEncode(Data(pb.coreCbor))
+        
     out["verificationMethod"] = pb.vm.map { vm in
         var d: [String: Any] = [
             "id": vm.id,
