@@ -45,7 +45,7 @@ public struct DIDDocument: Codable {
     public var controller: String
     
     /// Additional identity aliases .
-    public var alsoKnownAs: [String]
+    public var alsoKnownAs: [String]?
     
     ///monotonic intiger increment
     public var sequence: Int
@@ -106,7 +106,7 @@ public struct DIDDocument: Codable {
     // MARK: - Services / Policy / Integrity
     
     /// DID service endpoints (hub, wallet, messaging, passkey, etc.)
-    public var service: [Service]
+    public var service: [Service]?
     
     /// Allowed verificationMethods for key rotations.
     public var updatePolicy: UpdatePolicy
@@ -136,7 +136,7 @@ public struct DIDDocument: Codable {
         context: [String],
         id: String,
         controller: String,
-        alsoKnownAs: [String],
+        alsoKnownAs: [String]?,
         sequence: Int,
         prev: String?,
         hardwareBound: Bool? = nil,
@@ -151,7 +151,7 @@ public struct DIDDocument: Codable {
         assertionMethod: [String],
         capabilityInvocation: [String],
         keyAgreement: [String],
-        service: [Service],
+        service: [Service]?,
         updatePolicy: UpdatePolicy,
         attestations: [Attestation],
         proof: Proof

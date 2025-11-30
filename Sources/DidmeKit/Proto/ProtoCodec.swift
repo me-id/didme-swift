@@ -132,7 +132,7 @@ func didDocumentToProto(_ doc: DIDDocument) throws -> PbDIDDocument {
     pb.id = doc.id
     pb.controller = doc.controller
     pb.ctx = doc.context
-    pb.also = doc.alsoKnownAs
+    pb.also = doc.alsoKnownAs ?? []
     pb.biometric = doc.biometricProtected ?? false
     pb.hardware = doc.hardwareBound ?? false
     pb.deviceModel = doc.deviceModel ?? ""
@@ -162,7 +162,7 @@ func didDocumentToProto(_ doc: DIDDocument) throws -> PbDIDDocument {
     pb.ka = doc.keyAgreement
 
     // services
-    pb.svc = doc.service.map { svc in
+    pb.svc = (doc.service ?? []).map { svc in
         var s = PbService()
         s.id = svc.id
         s.type = svc.type
@@ -404,22 +404,38 @@ func jsonToProto(_ data: Data) throws -> PbDIDDocument {
 
 func protoToJSON(_ pb: PbDIDDocument) throws -> Data {
     var out: [String: Any] = [:]
-    
+
+    // Required fields
     out["@context"] = pb.ctx
     out["id"] = pb.id
     out["controller"] = pb.controller
-    out["alsoKnownAs"] = pb.also
-    out["biometricProtected"] = pb.biometric
-    out["hardwareBound"] = pb.hardware
-    out["deviceModel"] = pb.deviceModel
-    
     out["sequence"] = pb.seq
-    out["prev"] = pb.prev
     out["currentCore"] = pb.core
     out["keyHistory"] = pb.keyHistory
-    
     out["coreCbor"] = b64urlEncode(Data(pb.coreCbor))
-        
+
+    // Optional arrays
+    if !pb.also.isEmpty {
+        out["alsoKnownAs"] = pb.also
+    }
+
+    // Optional booleans (only emit when true)
+    if pb.biometric {
+        out["biometricProtected"] = true
+    }
+    if pb.hardware {
+        out["hardwareBound"] = true
+    }
+
+    // Optional strings (omit empty)
+    if !pb.deviceModel.isEmpty {
+        out["deviceModel"] = pb.deviceModel
+    }
+    if !pb.prev.isEmpty {
+        out["prev"] = pb.prev
+    }
+
+    // Required arrays
     out["verificationMethod"] = pb.vm.map { vm in
         var d: [String: Any] = [
             "id": vm.id,
@@ -432,33 +448,37 @@ func protoToJSON(_ pb: PbDIDDocument) throws -> Data {
         }
         return d
     }
-    
     out["authentication"] = pb.authn
     out["assertionMethod"] = pb.assert
     out["capabilityInvocation"] = pb.inv
     out["keyAgreement"] = pb.ka
-    
-    let decoder = JSONDecoder()
-    out["service"] = pb.svc.map { s in
-        var ep: Any = NSNull()
-        if !s.endpoint.isEmpty,
-           let o = try? decoder.decode(AnyJSON.self, from: s.endpoint) {
-            ep = o
+
+    // Optional service array — omit if empty
+    if !pb.svc.isEmpty {
+        let decoder = JSONDecoder()
+        out["service"] = pb.svc.map { s in
+            var ep: Any = NSNull()
+            if !s.endpoint.isEmpty,
+               let o = try? decoder.decode(AnyJSON.self, from: s.endpoint) {
+                ep = o
+            }
+            return [
+                "id": s.id,
+                "type": s.type,
+                "version": s.version,
+                "serviceEndpoint": ep
+            ]
         }
-        return [
-            "id": s.id,
-            "type": s.type,
-            "version": s.version,
-            "serviceEndpoint": ep
-        ]
     }
-    
+
+    // Optional object - policy
     if pb.hasPolicy {
         out["updatePolicy"] = [
             "allowedVerificationMethods": pb.policy.allowed
         ]
     }
-    
+
+    // Required array (attestations)
     out["attestations"] = pb.att.map { a in
         [
             "alg": pbAlgorithmToString(a.alg),
@@ -466,19 +486,22 @@ func protoToJSON(_ pb: PbDIDDocument) throws -> Data {
             "sig": b64urlEncode(Data(a.sig))
         ]
     }
-    
+
+    // Optional proof
     if pb.hasProof {
-        out["proof"] = [
-            "id": pb.proof.id,
+        var p: [String: Any] = [
             "type": pb.proof.type,
-            "cryptosuite": pb.proof.cryptosuite,
-            "proofPurpose": pb.proof.purpose,
-            "verificationMethod": pb.proof.vm,
-            "created": pb.proof.created,
-            "jws": pb.proof.jws
+            "proofPurpose": pb.proof.purpose
         ]
+        if !pb.proof.id.isEmpty { p["id"] = pb.proof.id }
+        if !pb.proof.cryptosuite.isEmpty { p["cryptosuite"] = pb.proof.cryptosuite }
+        if !pb.proof.vm.isEmpty { p["verificationMethod"] = pb.proof.vm }
+        if !pb.proof.created.isEmpty { p["created"] = pb.proof.created }
+        if !pb.proof.jws.isEmpty { p["jws"] = pb.proof.jws }
+        out["proof"] = p
     }
-    
+
+    // Optional array - domainVerification
     if !pb.dv.isEmpty {
         out["domainVerification"] = pb.dv.map { dv in
             var proof: Any = NSNull()
@@ -496,11 +519,9 @@ func protoToJSON(_ pb: PbDIDDocument) throws -> Data {
             ]
         }
     }
-    
+
     let json = try JSONSerialization.data(withJSONObject: out, options: [])
     return try DIDJCS.canonicalData(fromJSONData: json)
-    
-    
 }
 
 extension DIDJCS {
