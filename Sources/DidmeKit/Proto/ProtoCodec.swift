@@ -497,6 +497,15 @@ func protoToJSON(_ pb: PbDIDDocument) throws -> Data {
         }
     }
     
-    return try JSONSerialization.data(withJSONObject: out, options: [.prettyPrinted, .sortedKeys])
+    let json = try JSONSerialization.data(withJSONObject: out, options: [])
+    return try DIDJCS.canonicalData(fromJSONData: json)
     
+    
+}
+
+extension DIDJCS {
+    static func canonicalData(fromJSONData data: Data) throws -> Data {
+        let obj = try JSONSerialization.jsonObject(with: data)
+        return try DIDJCS.canonicalData(from: obj)
+    }
 }
