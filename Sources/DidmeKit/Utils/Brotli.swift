@@ -16,7 +16,6 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //
-
 import Foundation
 import Compression
 
@@ -48,7 +47,15 @@ public enum DIDBrotli {
 
         if data.isEmpty { return Data() }
 
-        var stream = compression_stream()
+        // Explicit struct initialization
+        var stream = compression_stream(
+            dst_ptr: nil,
+            dst_size: 0,
+            src_ptr: nil,
+            src_size: 0,
+            state: nil
+        )
+
         var status = compression_stream_init(&stream, operation, algorithm)
         guard status != COMPRESSION_STATUS_ERROR else {
             throw BrotliError.streamInit
