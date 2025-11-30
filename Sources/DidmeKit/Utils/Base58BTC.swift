@@ -42,7 +42,7 @@ public enum Base58BTC {
     public static func encode(_ data: Data) -> String {
         guard !data.isEmpty else { return "" }
 
-        var bytes = [UInt8](data)
+        let bytes = [UInt8](data)
 
         // Count leading zeros → "1"
         var zeros = 0

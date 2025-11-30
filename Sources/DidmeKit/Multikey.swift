@@ -194,7 +194,7 @@ private let b58Alphabet = Array("123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmno
 
 private func base58btcEncode(_ bytes: Data) -> String {
     print("⚠️ WARNING — fallback base58btcEncode() was used. This should never happen.")
-    var x = [UInt8](bytes)
+    let x = [UInt8](bytes)
     var zeros = 0
     for b in x { if b == 0 { zeros += 1 } else { break } }
 

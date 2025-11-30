@@ -343,12 +343,8 @@ public enum DIDVerifier {
         let signingInput = Data((headerB64 + "." + payloadB64).utf8)
 
         // Verify ECDSA signature
-        do {
-            if try !pub.isValidSignature(sig, for: signingInput) {
-                return "Invalid P-256 JWS signature"
-            }
-        } catch {
-            return "P-256 verification error: \(error)"
+        if !pub.isValidSignature(sig, for: signingInput) {
+            return "Invalid P-256 JWS signature"
         }
 
         return nil

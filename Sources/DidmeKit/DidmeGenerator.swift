@@ -210,7 +210,7 @@ public enum DIDGenerator {
         // ----------------------------------------------------
 
         // keyHistory: MUST contain only prior CIDs (no currentCore)
-        var keyHistory = input.previousKeyHistory
+        let keyHistory = input.previousKeyHistory
 
         // ----------------------------------------------------
         // 4. Build full verificationMethod array for DID Document

@@ -37,27 +37,30 @@ typealias PbDVType = Didme_DomainVerificationType
 // ENUM MAPPING HELPERS (MATCH GENERATED PROTO EXACTLY)
 // ------------------------------------------------------------
 private func pbAlgorithm(from s: String?) -> PbAlgorithm {
-    guard let x = s?.uppercased() else { return .algUnspecified }
+    guard let x = s else { return .algUnspecified }
 
     switch x {
-    case "ED25519":       return .ed25519
-    case "ES256":         return .es256
-    case "ML-DSA-87":     return .mlDsa87
-    case "ML_KEM_1024", "ML-KEM-1024":
-                          return .mlKem1024
-    case "SECP256K1":     return .secp256K1
-    default:              return .algUnspecified
+    case DIDAlgorithm.ed25519.rawValue:      return .ed25519
+    case DIDAlgorithm.x25519.rawValue:       return .x25519
+    case DIDAlgorithm.es256.rawValue:        return .es256
+    case DIDAlgorithm.secp256k1.rawValue:    return .secp256K1
+    case DIDAlgorithm.mldsa87.rawValue:      return .mlDsa87
+    case DIDAlgorithm.mlkem1024.rawValue:    return .mlKem1024
+    default:                                  return .algUnspecified
     }
 }
 
 private func pbAlgorithmToString(_ a: PbAlgorithm) -> String {
     switch a {
-    case .ed25519:     return "Ed25519"
-    case .es256:       return "ES256"
-    case .mlDsa87:     return "ML-DSA-87"
-    case .mlKem1024:   return "ML-KEM-1024"
-    case .secp256K1:   return "secp256k1"
-    default:           return ""
+    case .ed25519:       return DIDAlgorithm.ed25519.rawValue
+    case .x25519:        return DIDAlgorithm.x25519.rawValue
+    case .es256:         return DIDAlgorithm.es256.rawValue
+    case .secp256K1:     return DIDAlgorithm.secp256k1.rawValue
+    case .mlDsa87:       return DIDAlgorithm.mldsa87.rawValue
+    case .mlKem1024:     return DIDAlgorithm.mlkem1024.rawValue
+    case .algUnspecified: return ""
+    case .UNRECOGNIZED(_):
+        return ""
     }
 }
 

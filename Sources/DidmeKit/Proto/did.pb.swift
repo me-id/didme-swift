@@ -8,23 +8,6 @@
 // For information on using the generated types, please see the documentation:
 //   https://github.com/apple/swift-protobuf/
 
-//  DidmeKit
-//
-//  Copyright © 2025 ReallyMe LLC
-//
-//  Licensed under the Apache License, Version 2.0 (the "License");
-//  you may not use this file except in compliance with the License.
-//  You may obtain a copy of the License at
-//
-//      http://www.apache.org/licenses/LICENSE-2.0
-//
-//  Unless required by applicable law or agreed to in writing, software
-//  distributed under the License is distributed on an "AS IS" BASIS,
-//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//  See the License for the specific language governing permissions and
-//  limitations under the License.
-//
-
 import Foundation
 import SwiftProtobuf
 
@@ -87,11 +70,24 @@ public enum Didme_KeyType: SwiftProtobuf.Enum, Swift.CaseIterable {
 public enum Didme_Algorithm: SwiftProtobuf.Enum, Swift.CaseIterable {
   public typealias RawValue = Int
   case algUnspecified // = 0
+
+  /// EdDSA over Curve25519
   case ed25519 // = 1
-  case es256 // = 2
-  case mlDsa87 // = 3
-  case mlKem1024 // = 4
-  case secp256K1 // = 5
+
+  /// X25519 key agreement (was missing before)
+  case x25519 // = 2
+
+  /// P-256 / secp256r1
+  case es256 // = 3
+
+  /// Bitcoin/Ethereum curve
+  case secp256K1 // = 4
+
+  /// Dilithium-level signature
+  case mlDsa87 // = 5
+
+  /// Kyber KEM 1024
+  case mlKem1024 // = 6
   case UNRECOGNIZED(Int)
 
   public init() {
@@ -102,10 +98,11 @@ public enum Didme_Algorithm: SwiftProtobuf.Enum, Swift.CaseIterable {
     switch rawValue {
     case 0: self = .algUnspecified
     case 1: self = .ed25519
-    case 2: self = .es256
-    case 3: self = .mlDsa87
-    case 4: self = .mlKem1024
-    case 5: self = .secp256K1
+    case 2: self = .x25519
+    case 3: self = .es256
+    case 4: self = .secp256K1
+    case 5: self = .mlDsa87
+    case 6: self = .mlKem1024
     default: self = .UNRECOGNIZED(rawValue)
     }
   }
@@ -114,10 +111,11 @@ public enum Didme_Algorithm: SwiftProtobuf.Enum, Swift.CaseIterable {
     switch self {
     case .algUnspecified: return 0
     case .ed25519: return 1
-    case .es256: return 2
-    case .mlDsa87: return 3
-    case .mlKem1024: return 4
-    case .secp256K1: return 5
+    case .x25519: return 2
+    case .es256: return 3
+    case .secp256K1: return 4
+    case .mlDsa87: return 5
+    case .mlKem1024: return 6
     case .UNRECOGNIZED(let i): return i
     }
   }
@@ -126,10 +124,11 @@ public enum Didme_Algorithm: SwiftProtobuf.Enum, Swift.CaseIterable {
   public static let allCases: [Didme_Algorithm] = [
     .algUnspecified,
     .ed25519,
+    .x25519,
     .es256,
+    .secp256K1,
     .mlDsa87,
     .mlKem1024,
-    .secp256K1,
   ]
 
 }
@@ -432,7 +431,7 @@ extension Didme_KeyType: SwiftProtobuf._ProtoNameProviding {
 }
 
 extension Didme_Algorithm: SwiftProtobuf._ProtoNameProviding {
-  public static let _protobuf_nameMap = SwiftProtobuf._NameMap(bytecode: "\0\u{2}\0ALG_UNSPECIFIED\0\u{1}ED25519\0\u{1}ES256\0\u{1}ML_DSA_87\0\u{1}ML_KEM_1024\0\u{1}SECP256K1\0")
+  public static let _protobuf_nameMap = SwiftProtobuf._NameMap(bytecode: "\0\u{2}\0ALG_UNSPECIFIED\0\u{1}ED25519\0\u{1}X25519\0\u{1}ES256\0\u{1}SECP256K1\0\u{1}ML_DSA_87\0\u{1}ML_KEM_1024\0")
 }
 
 extension Didme_DomainVerificationType: SwiftProtobuf._ProtoNameProviding {

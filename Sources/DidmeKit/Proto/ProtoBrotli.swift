@@ -16,11 +16,8 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //
-//
-//
 
 import Foundation
-
 
 // MARK: - High-level helpers
 
@@ -41,23 +38,20 @@ public func decodeBrotliProtoToDidDocument(_ data: Data) throws -> DIDDocument {
     // 1. Decompress Brotli
     let decompressed = try DIDBrotli.decompress(data)
 
-    // 2. Parse protobuf
-    let pb = try PbDIDDocument(serializedData: decompressed)
+    // 2. Parse protobuf (new API)
+    let pb = try PbDIDDocument(serializedBytes: decompressed)
 
-    // 3. Convert proto -> JSON Data using your existing protoToJSON
+    // 3. Convert proto -> JSON Data
     let jsonData = try protoToJSON(pb)
 
     // 4. Decode JSON -> DIDDocument (your Swift model)
     let decoder = JSONDecoder()
-    let doc = try decoder.decode(DIDDocument.self, from: jsonData)
-    return doc
+    return try decoder.decode(DIDDocument.self, from: jsonData)
 }
 
 /// Brotli-compressed Protobuf -> JSON Data (matches Go/TS output)
 public func decodeBrotliProtoToJSON(_ data: Data) throws -> Data {
     let decompressed = try DIDBrotli.decompress(data)
-    let pb = try PbDIDDocument(serializedData: decompressed)
+    let pb = try PbDIDDocument(serializedBytes: decompressed)
     return try protoToJSON(pb)
 }
-
-

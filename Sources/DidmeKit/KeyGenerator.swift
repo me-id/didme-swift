@@ -161,7 +161,7 @@ public enum DIDKeyGenerator {
         // ----------------------------------------------------
         // X25519
         // ----------------------------------------------------
-        let x25519Priv = try Curve25519.KeyAgreement.PrivateKey()
+        let x25519Priv = Curve25519.KeyAgreement.PrivateKey()
         let x25519Pub  = Data(x25519Priv.publicKey.rawRepresentation)
 
         // ----------------------------------------------------
