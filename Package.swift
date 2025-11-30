@@ -46,8 +46,8 @@ let package = Package(
             ),
         // Brotli
         .package(
-                url: "https://github.com/SusanDoggie/brotli",
-                from: "1.0.3"
+                url: "https://github.com/f-meloni/SwiftBrotli",
+                from: "0.1.0"
             ),        
     ],
     targets: [
@@ -60,7 +60,7 @@ let package = Package(
                 "BigInt",
                 "Digest",
                 .product(name: "SwiftProtobuf", package: "swift-protobuf"),
-                "Brotli"
+                "SwiftBrotli"
             ],
             path: "Sources/DidmeKit"
         ),

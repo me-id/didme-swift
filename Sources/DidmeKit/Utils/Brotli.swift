@@ -16,17 +16,37 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //
-
 import Foundation
-import Brotli
+import SwiftBrotli
+
+public enum BrotliError: Error {
+    case compressFailed(Error)
+    case decompressFailed(Error)
+}
 
 public enum DIDBrotli {
 
     public static func compress(_ data: Data) throws -> Data {
-        try data.brotliCompressed()
+        let brotli = Brotli()
+        let result = brotli.compress(data)
+
+        switch result {
+        case .success(let compressed):
+            return compressed
+        case .failure(let error):
+            throw BrotliError.compressFailed(error)
+        }
     }
 
     public static func decompress(_ data: Data) throws -> Data {
-        try data.brotliDecompressed()
+        let brotli = Brotli()
+        let result = brotli.decompress(data)
+
+        switch result {
+        case .success(let decompressed):
+            return decompressed
+        case .failure(let error):
+            throw BrotliError.decompressFailed(error)
+        }
     }
 }
