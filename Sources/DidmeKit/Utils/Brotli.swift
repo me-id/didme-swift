@@ -49,13 +49,7 @@ public enum DIDBrotli {
         if data.isEmpty { return Data() }
 
         // Explicit struct initialization
-        var stream = compression_stream(
-            dst_ptr: UnsafeMutablePointer<UInt8>(bitPattern: 0),
-            dst_size: 0,
-            src_ptr: UnsafePointer<UInt8>(bitPattern: 0),
-            src_size: 0,
-            state: UnsafeMutableRawPointer(bitPattern: 0)
-        )
+        var stream = compression_stream()
 
         var status = compression_stream_init(&stream, operation, algorithm)
         guard status != COMPRESSION_STATUS_ERROR else {
