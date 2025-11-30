@@ -47,7 +47,7 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "DIDKit",
+            name: "DidmeKit",
             dependencies: [
                 "SwiftDilithium",
                 "SwiftKyber",

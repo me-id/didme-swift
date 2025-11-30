@@ -17,7 +17,7 @@
 //  limitations under the License.
 //
 //
-//  Multibase encode/decode helpers for DIDKit.
+//  Multibase encode/decode helpers for DidmeKit.
 //  Supports:
 //     • base58btc  ("z...")
 //     • base32     ("b...")
@@ -37,7 +37,7 @@ public enum DIDMultibase {
 
     /// Multibase base58btc: prefix "z"
     public static func encodeBase58btc(_ data: Data) -> String {
-        // Base58BTC.encode is provided in DIDKit
+        // Base58BTC.encode is provided in DidmeKit
         return "z" + Base58BTC.encode(data)
     }
 

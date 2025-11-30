@@ -17,7 +17,7 @@
 //  limitations under the License.
 //
 //
-//  Encoding helpers for DIDKit:
+//  Encoding helpers for DidmeKit:
 //    • Base64URL encoding/decoding
 //    • gzip compression + base64url
 //    • Raw gzip/gunzip helpers

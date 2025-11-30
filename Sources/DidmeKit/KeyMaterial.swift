@@ -108,7 +108,7 @@ public struct DIDKeyMaterial {
     // P-256 update key. They are determined by the *app layer* and
     // injected into the DID Core CBOR during DID generation.
     //
-    // The DIDKit package sets these to defaults (false/nil).
+    // The DidmeKit package sets these to defaults (false/nil).
     // The app overrides them when Secure Enclave or biometrics are used.
     //
     // ============================================================

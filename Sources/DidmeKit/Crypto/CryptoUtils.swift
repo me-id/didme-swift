@@ -17,7 +17,7 @@
 //  limitations under the License.
 //
 //
-//  Low-level crypto utilities used across DIDKit.
+//  Low-level crypto utilities used across DidmeKit.
 //  Includes PEM/DER helpers, hashing helpers, and general crypto formatting.
 //  NOT for key generation (see DIDKeyGenerator).
 //
