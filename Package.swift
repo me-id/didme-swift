@@ -54,7 +54,7 @@ let package = Package(
                 "ASN1",
                 "BigInt",
                 "Digest",
-                "SwiftProtobuf"
+                .product(name: "SwiftProtobuf", package: "swift-protobuf")
             ],
             path: "Sources/DidmeKit"
         ),
